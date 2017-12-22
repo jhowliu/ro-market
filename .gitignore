@@ -1,0 +1,8 @@
+# cached files
+.DS_Store
+
+# virtualenv
+.env/
+
+# metadata
+imgs

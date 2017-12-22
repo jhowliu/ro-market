@@ -1,8 +1,10 @@
 import os
-import tesseract
-import pyautogui as bot
+import pytesseract
+import pyautogui
 
 from PIL import Image
+
+from .utils import keep_numerics
 
 class AutoCheck(object):
 
@@ -10,30 +12,36 @@ class AutoCheck(object):
 
         self._zeny_icon = Image.open(_ZENY_)
 
-        pass
-
-    def capture_price(self):
+    def get_all_price(self):
         """
         Get the all prices on the screen
 
         @return
             prices: [int]
         """
-        pass
+        # in order to skip the zeny icon
 
-    def _find_coordinates(self, img):
+        results = []
+        skip_width = self._zeny_icon.width
+
+        targets = pyautogui.locateAllOnScreen(_zeny_icon)
+
+        for x, y, _, _ in targets:
+            img = self._capture_target(x+skip_width, y, 100, self._zeny_icon.height)
+            price = recognize_price(img)
+
+            if price is not None: results.append(price)
+
+        return results
+
+    def _capture_target(self, x, y, window_width, window_height):
         """
-        Find the given image location
-
-        @params
-            img: given image
-
-        @return
-            coordinates: (x, y, width, height)
+        Take a shot on x, y
         """
-        pass
+        return pyautogui.screenshot(region=(x, y, window_width, window_height))
 
-    def _recognize_digits(self, img):
+
+    def _recognize_price(self, img):
         """
         use tesseract OCR to recognize digits
 
@@ -43,4 +51,9 @@ class AutoCheck(object):
         @return
             number: Int
         """
-        pass
+        # use the ro.traineddata
+        tesseract_config = "-l ro"
+
+        predict = pytesseract.image_to_string(img, config=tesseract_config)
+
+        return keep_numerics(predict)
