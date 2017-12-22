@@ -29,8 +29,7 @@ class AutoCheck(object):
         for x, y, _, _ in targets:
             img = self._capture_target(x+skip_width, y, 100, self._zeny_icon.height)
             price = recognize_price(img)
-
-            if price is not None: results.append(price)
+            results.append(price)
 
         return results
 
