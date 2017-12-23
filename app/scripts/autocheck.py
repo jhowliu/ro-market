@@ -4,13 +4,14 @@ import pyautogui
 
 from PIL import Image
 
-from .utils import keep_numerics
+from app.scripts.utils import keep_numerics
+from app import config
 
 class AutoCheck(object):
 
-    def __init__(self, img_path="./imgs"):
+    def __init__(self):
 
-        self._zeny_icon = Image.open(_ZENY_)
+        self._zeny_icon = Image.open(config.ZENY_ICON)
 
     def get_all_price(self):
         """
@@ -24,12 +25,14 @@ class AutoCheck(object):
         results = []
         skip_width = self._zeny_icon.width
 
-        targets = pyautogui.locateAllOnScreen(_zeny_icon)
-
+        targets = pyautogui.locateAllOnScreen(self._zeny_icon)
+        print(targets)
         for x, y, _, _ in targets:
+            print(x, y)
             img = self._capture_target(x+skip_width, y, 100, self._zeny_icon.height)
-            price = self.recognize_price(img)
-            results.append(price)
+            img.show()
+            #price = self._recognize_price(img)
+            #results.append(price)
 
         return results
 

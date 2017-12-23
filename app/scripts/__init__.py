@@ -1,1 +1,1 @@
-__all__ = ['autocheck', 'autocontroller']
+__all__ = ['autocontroller', 'autocheck']

@@ -1,7 +1,9 @@
 import re
 import pyautogui
 
-def find_coordinates(self, img):
+from PIL import Image
+
+def find_coordinates(img_path):
     """
     Find the given image location
 
@@ -9,11 +11,14 @@ def find_coordinates(self, img):
         img: given image
 
     @return
-        coordinates: (x, y, width, height)
+        coordinates: (x, y)
     """
-    pass
+    target = pyautogui.locateCenterOnScreen(Image.open(img_path))
+    if target is None: return None
 
-def keep_numerics(self, text):
+    return (target[0], target[1])
+
+def keep_numerics(text):
     """
     keep the numerics from the given text
 

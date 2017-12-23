@@ -1,31 +1,34 @@
 import os
+import time
 import pyautogui
+
+from app.scripts.utils import find_coordinates
 
 class AutoController(object):
 
     def __init__(self):
         pass
 
-    def click(self, img):
+    @staticmethod
+    def click(coords):
         """
-        find location matched the given Image and click.
+        find location matched the given coordinates and click.
 
         @params:
-            img: Image
+            x, y: coordinates
 
         @return:
             True/False (isSuccess)
         """
-        try:
-            target = pyautogui.locateCenterOnScreen(img)
-            pyautogui.click(target)
-        except Exception as ex:
-            print('Cannot locate the given image in the screen')
-            return False
+        if coords is None: return False
 
-        return true
+        pyautogui.click(coords)
+        time.sleep(0.5)
 
-    def scroll(self, x, y, down=True):
+        return True
+
+    @staticmethod
+    def scroll(x, y, down=True):
         """
         scroll the screen on the given point(x, y)
 
