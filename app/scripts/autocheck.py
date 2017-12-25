@@ -4,8 +4,10 @@ import pyautogui
 
 from PIL import Image
 
-from app.scripts.utils import keep_numerics
 from app import config
+
+from app.scripts.utils import keep_numerics
+from app.scripts.utils import FindCoordinates
 
 class AutoCheck(object):
 
@@ -23,13 +25,14 @@ class AutoCheck(object):
         # in order to skip the zeny icon
 
         results = []
-        skip_width = self._zeny_icon.width
+        skip_width = int(self._zeny_icon.width/2)
 
-        targets = pyautogui.locateAllOnScreen(self._zeny_icon)
-        print(targets)
-        for x, y, _, _ in targets:
-            print(x, y)
-            img = self._capture_target(x+skip_width, y, 100, self._zeny_icon.height)
+        # middle points
+        targets = FindCoordinates.locate_all_targets(self._zeny_icon)
+
+        for x, y in targets:
+            correction_coords = (x+skip_width, y+_zeny_icon.height/2)
+            img = self._capture_target(correction_coords[0], correction_coords[1], 100, self._zeny_icon.height)
             img.show()
             #price = self._recognize_price(img)
             #results.append(price)

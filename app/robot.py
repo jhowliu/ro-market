@@ -1,6 +1,6 @@
 import app.config as config
 
-from app.scripts.utils import find_coordinates
+from app.scripts.utils import FindCoordinates
 from app.scripts.autocontroller import AutoController
 from app.scripts.autocheck import AutoCheck
 
@@ -25,7 +25,7 @@ class Robot(object):
             if success is False: continue
             # select subitems of selected item
             for baseline in config.EQUID_BASELINE_LIST:
-                base = find_coordinates(baseline)
+                base = FindCoordinates.locate_target(baseline)
                 if base is None: continue
                 for ix, item_list in enumerate(config.EQUID_LIST):
                     anchor = (base[0], base[1]+ix*config.EQUID_STEP_SIZE)
@@ -39,7 +39,7 @@ class Robot(object):
         pass
 
     def _select_for_image(self, img_path):
-        coords = find_coordinates(img_path)
+        coords = FindCoordinates.locate_target(img_path)
 
         return AutoController.click(coords)
 

@@ -2,7 +2,6 @@ import os
 import time
 import pyautogui
 
-from app.scripts.utils import find_coordinates
 
 class AutoController(object):
 
