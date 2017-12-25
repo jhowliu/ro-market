@@ -1,9 +1,12 @@
+import os
 import re
 import cv2
 import pyautogui
 import numpy as np
+
 from PIL import Image
 
+from app import config
 
 def keep_numerics(text):
     """
@@ -16,15 +19,14 @@ def keep_numerics(text):
         None/Int
     """
     result = None
-
     try:
         result = int(re.sub('[^0-9]', '', text))
     except Exception as ex:
         print("cannot get numerics")
 
-    return None
+    return result
 
-class FindCoordinates(self):
+class FindCoordinates():
 
     @staticmethod
     def locate_target(template_path, threshold=.9):
@@ -36,40 +38,39 @@ class FindCoordinates(self):
             threshold: to limit template match accuracy (optional)
 
         @return
-            middle: the middle point of the given template
+            max_loc: the top_right point of the given template
         """
-
         template = cv2.imread(template_path)
         h, w = template.shape[:-1]
 
-        img = pyautogui.screenshot().convert('L')
-        img = np.array(img)
+        # navie method
+        tmp_file = os.path.join(config.__TMP__, 'tmp.png')
+        pyautogui.screenshot(tmp_file)
+        img = cv2.imread(tmp_file)
 
         res = cv2.matchTemplate(img, template, cv2.TM_CCOEFF_NORMED)
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
-
+        print("Template: "+template_path+"\nAcc: " + str(max_val))
         if max_val < threshold: return None
 
-        middle = (min_loc[0] + int(w/2), min_loc[1] + int(h/2))
-
-        return middle
+        return max_loc
 
     @staticmethod
     def locate_all_targets(template_path, threshold=.9):
         targets = []
-
-        template = cv.imread(template_path)
+        template = cv2.imread(template_path)
         h, w = template.shape[:-1]
 
-        img = pyautogui.screenshot().convert('L')
-        img = np.array(img)
+        # navie method
+        tmp_file = os.path.join(config.__TMP__, 'tmp.png')
+        pyautogui.screenshot(tmp_file)
+        img = cv2.imread(tmp_file)
 
-        res = cv2.matchTemplate(img, template, cv.TM_CCOEFF_NORMED)
+        res = cv2.matchTemplate(img, template, cv2.TM_CCOEFF_NORMED)
 
         loc = np.where(res >= threshold)
 
         for pt in zip(*loc[::-1]):
-            middle = (pt[0] + int(w/2), pt[1] + int(h/2))
-            targets.append(middle)
+            targets.append(pt)
 
         return targets

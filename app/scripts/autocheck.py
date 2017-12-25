@@ -12,7 +12,6 @@ from app.scripts.utils import FindCoordinates
 class AutoCheck(object):
 
     def __init__(self):
-
         self._zeny_icon = Image.open(config.ZENY_ICON)
 
     def get_all_price(self):
@@ -25,17 +24,15 @@ class AutoCheck(object):
         # in order to skip the zeny icon
 
         results = []
-        skip_width = int(self._zeny_icon.width/2)
-
+        skip_width = self._zeny_icon.width
+        FindCoordinates.locate_target(config.ZENY_ICON)
         # middle points
-        targets = FindCoordinates.locate_all_targets(self._zeny_icon)
+        targets = FindCoordinates.locate_all_targets(config.ZENY_ICON)
 
         for x, y in targets:
-            correction_coords = (x+skip_width, y+_zeny_icon.height/2)
-            img = self._capture_target(correction_coords[0], correction_coords[1], 100, self._zeny_icon.height)
-            img.show()
-            #price = self._recognize_price(img)
-            #results.append(price)
+            img = self._capture_target(x+skip_width+5, y, 100, self._zeny_icon.height)
+            price = self._recognize_price(img)
+            results.append(price)
 
         return results
 
@@ -56,8 +53,12 @@ class AutoCheck(object):
         @return
             number: Int
         """
+        # check if os system is windows
         # use the ro.traineddata
-        tesseract_config = "-l ro"
+        if os.name == 'nt':
+            tesseract_config = "--tessdata-dir D:\Tesseract-OCR\\tessdata -l ro"
+        else:
+            tesseract_config = "-l ro"
 
         predict = pytesseract.image_to_string(img, config=tesseract_config)
 

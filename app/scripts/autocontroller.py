@@ -22,7 +22,7 @@ class AutoController(object):
         if coords is None: return False
 
         pyautogui.click(coords)
-        time.sleep(0.5)
+        time.sleep(0.8)
 
         return True
 

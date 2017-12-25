@@ -20,23 +20,24 @@ class Robot(object):
 
         print("START RUN")
         # select menu
-        for equid in config.MENU_LIST:
-            success = self._select_for_image(equid)
+
+        print("START SELECT MENU")
+        for menu in config.MENU_LIST:
+            success = self._select_for_image(menu)
             if success is False: continue
             # select subitems of selected item
-            for baseline in config.EQUID_BASELINE_LIST:
-                base = FindCoordinates.locate_target(baseline)
+            print("START SELECT SUB-MENU")
+            for submenu in config.SUBMENU_LIST:
+                base = FindCoordinates.locate_target(submenu)
                 if base is None: continue
+                print("START SELECT ITEMS")
                 for ix, item_list in enumerate(config.EQUID_LIST):
                     anchor = (base[0], base[1]+ix*config.EQUID_STEP_SIZE)
                     self._select_for_anchor(anchor)
-
-                    for item in item_list:
+                    for item in item_list[::-1]:
                         success = self._select_for_image(item)
-                        print('SELECT '+item + ':'+str(success))
-
                         print(self.checker.get_all_price())
-        pass
+                        break
 
     def _select_for_image(self, img_path):
         coords = FindCoordinates.locate_target(img_path)
@@ -51,7 +52,6 @@ class Robot(object):
             img_path: the path of image you want to select
         """
         print("Success: " + str(AutoController.click(anchor)))
-        pass
 
     def _get_price_for_item(self):
         """
